@@ -1,12 +1,181 @@
-html, body { margin: 0; height: 100%; background: #f2f0f4; color: #1d1b22; font: 15px/1.4 system-ui, sans-serif; }
-.app { display: flex; gap: 32px; align-items: center; justify-content: center; height: 100%; padding: 24px; box-sizing: border-box; }
-.controls { display: flex; flex-direction: column; gap: 14px; width: 280px; }
-.controls h1 { margin: 0; font-size: 28px; }
-.controls p { margin: 0; color: #5c5866; }
-label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; }
-input[type=text] { font: inherit; padding: 8px; border: 1px solid #c9c4d1; border-radius: 6px; }
-button { font: inherit; font-weight: 700; padding: 10px; border: 0; border-radius: 6px; background: #1d1b22; color: #fff; cursor: pointer; }
-canvas { width: min(70vh, 60vw); height: min(70vh, 60vw); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); }
-body.shot-cover .controls { display: none; }
+@font-face {
+  font-family: "Anton";
+  src: url("./fonts/Anton-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: #120e1a;
+  color: #f4eef7;
+  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.app {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px;
+}
+
+.controls {
+  width: 320px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.controls h1 {
+  margin: 0;
+  font-family: "Anton", system-ui, sans-serif;
+  font-size: 42px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #ff9a3d, #ff2e88 55%, #7b5cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tagline { margin: -8px 0 0; color: #c9bcd4; }
+
+fieldset {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #3a2f4d;
+  border-radius: 10px;
+  background: #1b1428;
+}
+
+legend {
+  padding: 0 6px;
+  font-weight: 700;
+  color: #ffb86b;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px 0;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choices label {
+  flex-direction: row;
+  align-items: center;
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid #3a2f4d;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.choices label:has(input:checked) {
+  border-color: #ff2e88;
+  background: #3a1630;
+  color: #fff;
+}
+
+input[type="text"], select {
+  font: inherit;
+  color: #f4eef7;
+  background: #241b33;
+  border: 1px solid #4a3a63;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+input[type="range"] { width: 100%; accent-color: #ff2e88; }
+
+.file-label { cursor: pointer; }
+.file-label input { cursor: pointer; }
+
+.hint { margin: 4px 0; color: #a99bb8; font-size: 13px; font-weight: 400; }
+
+.samples { display: flex; gap: 8px; margin: 8px 0; }
+.samples button {
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background: none;
+  line-height: 0;
+}
+.samples button[aria-pressed="true"] { border-color: #ff2e88; }
+.samples img { width: 64px; height: 64px; object-fit: cover; display: block; }
+
+button {
+  font: inherit;
+  font-weight: 700;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #2c2140;
+  color: #f4eef7;
+  cursor: pointer;
+}
+button:hover { background: #3a2c55; }
+
+button.export {
+  background: linear-gradient(90deg, #ff7a18, #ff2e88);
+  color: #fff;
+  font-size: 17px;
+  padding: 13px;
+}
+
+#status { min-height: 1.4em; margin: 0; color: #8fe3a8; }
+
+.preview {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.preview canvas {
+  width: min(72vh, 62vw);
+  max-width: 760px;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 12px 44px rgba(0, 0, 0, 0.55), 0 0 0 1px #3a2f4d;
+  cursor: grab;
+  touch-action: none;
+}
+.preview canvas:active { cursor: grabbing; }
+
+.preview-note { margin: 0; color: #a99bb8; font-size: 13px; }
+
+/* Screenshot scenes: cover alone, edge to edge. */
+body.shot-cover .controls,
+body.shot-cover .preview-note { display: none; }
 body.shot-cover .app { padding: 0; }
-body.shot-cover canvas { width: 100vw; height: 100vh; box-shadow: none; }
+body.shot-cover .preview { position: static; }
+body.shot-cover .preview canvas {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  border-radius: 0;
+  box-shadow: none;
+  object-fit: contain;
+  background: #000;
+}
+
+@media (max-width: 900px) {
+  .app { flex-direction: column; align-items: center; }
+  .controls { width: min(94vw, 480px); }
+  .preview { position: static; }
+  .preview canvas { width: min(94vw, 640px); }
+}

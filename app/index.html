@@ -3,20 +3,85 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Snap</title>
+<title>Vice Panels — GTA-style cover maker</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <main class="app">
-  <section class="controls">
-    <h1>Cover Snap</h1>
-    <p>A photo and a caption, made into a square cover.</p>
-    <label>Photo <input id="photo" type="file" accept="image/*"></label>
-    <label>Caption <input id="caption" type="text" maxlength="40" value="Sunset Heist"></label>
-    <button id="export" type="button">Export PNG 1080 x 1080</button>
+  <section class="controls" aria-label="Cover controls">
+    <h1>Vice Panels</h1>
+    <p class="tagline">Your photos, cut into a GTA-style multi-panel poster. Pick photos, a layout and a grade, then export a PNG.</p>
+
+    <fieldset>
+      <legend>1 · Photos</legend>
+      <label class="file-label">Add photos from your machine
+        <input id="photoInput" type="file" accept="image/*" multiple>
+      </label>
+      <p class="hint">Or tap a sample. Photos never leave your machine.</p>
+      <div id="sampleRow" class="samples" role="group" aria-label="Sample photos"></div>
+      <button id="fillAll" type="button">Fill every panel with the selected photo</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>2 · Layout</legend>
+      <div class="choices" id="layoutChoices">
+        <label><input type="radio" name="layout" value="grid" checked> Grid · 2 × 2</label>
+        <label><input type="radio" name="layout" value="hero"> Hero · big + two</label>
+        <label><input type="radio" name="layout" value="trio"> Trio · three tall</label>
+        <label><input type="radio" name="layout" value="duo"> Duo · two halves</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>3 · Colour grade</legend>
+      <div class="choices" id="gradeChoices">
+        <label><input type="radio" name="grade" value="sunset" checked> Sunset</label>
+        <label><input type="radio" name="grade" value="neon"> Neon Nights</label>
+        <label><input type="radio" name="grade" value="teal"> Teal Dusk</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>4 · Caption</legend>
+      <label>Title <input id="titleInput" type="text" maxlength="32" value="Sunset Heist"></label>
+      <label>Subtitle <input id="subtitleInput" type="text" maxlength="40" value="Vice Nights"></label>
+      <label>Caption position
+        <select id="captionPos">
+          <option value="bottom" selected>Bottom</option>
+          <option value="top">Top</option>
+        </select>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>5 · Selected panel</legend>
+      <p class="hint" id="panelLabel">Panel 1 of 4 — click a panel in the preview to pick it.</p>
+      <label>Photo in this panel
+        <select id="panelPhoto"></select>
+      </label>
+      <label>Zoom <input id="zoomRange" type="range" min="1" max="2.5" step="0.01" value="1"></label>
+      <label>Shift left / right <input id="offsetX" type="range" min="-0.5" max="0.5" step="0.01" value="0"></label>
+      <label>Shift up / down <input id="offsetY" type="range" min="-0.5" max="0.5" step="0.01" value="0"></label>
+      <p class="hint">Tip: drag the preview to move the photo, scroll over it to zoom.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>6 · Export size</legend>
+      <div class="choices" id="sizeChoices">
+        <label><input type="radio" name="size" value="1080x1080" checked> 1080 × 1080</label>
+        <label><input type="radio" name="size" value="1080x1350"> 1080 × 1350</label>
+        <label><input type="radio" name="size" value="1920x1080"> 1920 × 1080</label>
+      </div>
+    </fieldset>
+
+    <button id="exportBtn" type="button" class="export">Export PNG</button>
     <p id="status" role="status"></p>
   </section>
-  <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
+
+  <section class="preview" aria-label="Live preview">
+    <canvas id="cover" width="1080" height="1080"></canvas>
+    <p class="preview-note">Live preview — what you see is what the PNG gets.</p>
+  </section>
 </main>
 <script type="module" src="./src/main.js"></script>
 </body>
